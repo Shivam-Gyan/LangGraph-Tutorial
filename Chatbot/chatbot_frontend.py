@@ -21,9 +21,9 @@ for message in st.session_state['chat_history']:
 
 user_input = st.chat_input("Type your message here...")
 
+
 if user_input:
 
-    # display user message
     st.session_state['chat_history'].append({'role':'user','content':user_input})
     with st.chat_message('user'):
         st.markdown(user_input)
@@ -34,13 +34,27 @@ if user_input:
         'messages':[HumanMessage(content=user_input)]
     }
 
-    final_state = chatbot.invoke(initial_state,config = CONFIG)
+# Without streaming
 
-    bot_response = final_state['messages'][-1].content
+    # final_state = chatbot.invoke(initial_state,config = CONFIG)
 
-    st.session_state['chat_history'].append({'role':'assistant','content':bot_response})
+    # bot_response = final_state['messages'][-1].content
+
+    # st.session_state['chat_history'].append({'role':'assistant','content':bot_response})
+    # with st.chat_message('assistant'):
+    #     st.markdown(bot_response)
+
+# With streaming
+
     with st.chat_message('assistant'):
-        st.markdown(bot_response)
+        ai_message = st.write_stream(
+            message_chunk.content for message_chunk,metadata in chatbot.stream(
+                initial_state,
+                config = CONFIG,
+                stream_mode = 'messages'
+            )
+        )
+    st.session_state['chat_history'].append({'role':'assistant','content':ai_message})
 
 
 

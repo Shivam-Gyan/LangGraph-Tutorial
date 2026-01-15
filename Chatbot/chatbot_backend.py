@@ -2,6 +2,7 @@
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import StateGraph, START,END
+from langchain_ollama import ChatOllama
 from langgraph.graph.message import add_messages
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langgraph.checkpoint.memory import InMemorySaver
@@ -15,7 +16,8 @@ load_dotenv()
 
 
 # model setup
-model = ChatGoogleGenerativeAI(api_key=os.getenv("GOOGLE_API_KEY"), model="gemini-2.5-flash-lite", temperature=0)
+# model = ChatGoogleGenerativeAI(api_key=os.getenv("GOOGLE_API_KEY"), model="gemini-2.5-flash-lite", temperature=0)
+model  = ChatOllama(model="llama3.2:1b", temperature=0)
 
 # defining state schema
 class ChatBOTState(BaseModel):
