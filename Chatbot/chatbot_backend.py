@@ -1,12 +1,13 @@
 # imports 
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import StateGraph, START,END
 from langchain_ollama import ChatOllama
 from langgraph.graph.message import add_messages
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
-from langgraph.checkpoint.memory import InMemorySaver
+# from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langsmith import traceable
 from pydantic import BaseModel, Field
 from typing import List, Annotated
 from dotenv import load_dotenv
@@ -16,6 +17,7 @@ import sqlite3
 
 load_dotenv()
 
+os.environ["LANGSMITH_PROJECT"] = "LangGraph-Chatbot"
 
 # model setup
 # model = ChatGoogleGenerativeAI(api_key=os.getenv("GOOGLE_API_KEY"), model="gemini-2.5-flash-lite", temperature=0)
@@ -27,6 +29,7 @@ class ChatBOTState(BaseModel):
 
 
 # defining graph nodes
+@traceable(name="chat_bot_node",tags=["chatbot","ollama"], metadata={"model": "ministral-3:3b",'provider':'Ollama'})
 def chat_bot(state: ChatBOTState) :
     response = model.invoke(state.messages)
     return {'messages':[response]}
@@ -68,6 +71,7 @@ chatbot = graph.compile(checkpointer = checkpoint)
 # print(response)
 
 # list() is in buitin method of SqliteSaver to list all thread ids and details it is generator 
+# @traceable(name="get_all_thread_ids", tags=["chatbot","checkpoint"], metadata={"method": "list_threads"})
 def get_all_thread_ids():
     threads_details = checkpoint.list(None) #None to get all threads , you can pass specific thread_id to get details of that thread only
 
