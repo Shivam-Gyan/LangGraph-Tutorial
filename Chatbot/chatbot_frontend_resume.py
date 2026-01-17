@@ -1,3 +1,4 @@
+from urllib import response
 import streamlit as st
 from chatbot_backend import chatbot
 from langchain_core.messages import HumanMessage
@@ -27,7 +28,14 @@ def save_current_thread(thread_id):
 def load_chat_history(thread_id):
     st.session_state['thread_id'] = thread_id
     config = {"configurable":{"thread_id":thread_id}}
-    return chatbot.get_state(config = config).values['messages']
+    response = chatbot.get_state(config = config) # get the state from chatbot backend
+    messages = response.values.get("messages", []) # get messages from the response
+
+    # Ensure it's always a list
+    if messages is None:
+        return []
+
+    return messages
 
 
 
@@ -101,9 +109,10 @@ st.subheader(f"Chatbot Frontend : Thread ID {st.session_state['thread_id']}")
 st.markdown("---")
 
 
-for message in st.session_state['chat_history']:
-    with st.chat_message(message['role']):
-        st.markdown(message['content'])
+if st.session_state['chat_history']:
+    for chat in st.session_state['chat_history']:
+        with st.chat_message(chat['role']):
+            st.markdown(chat['content'])
 
 user_input = st.chat_input("Type your message here...")
 
