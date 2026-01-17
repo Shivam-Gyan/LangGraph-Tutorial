@@ -19,7 +19,7 @@ load_dotenv()
 
 # model setup
 # model = ChatGoogleGenerativeAI(api_key=os.getenv("GOOGLE_API_KEY"), model="gemini-2.5-flash-lite", temperature=0)
-model  = ChatOllama(model="llama3.1:8b", temperature=0)
+model  = ChatOllama(model="ministral-3:3b", temperature=0)
 
 # defining state schema
 class ChatBOTState(BaseModel):
