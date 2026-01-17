@@ -1,6 +1,6 @@
 from urllib import response
 import streamlit as st
-from chatbot_backend import chatbot
+from chatbot_backend import chatbot, get_all_thread_ids
 from langchain_core.messages import HumanMessage
 import uuid
 
@@ -49,7 +49,8 @@ if 'chat_history' not in st.session_state:
 
 # list of all thread_ids
 if 'threads' not in st.session_state:
-    st.session_state['threads'] = []
+    # instead of declaring an empty list every time, we can load existing thread ids from the database
+    st.session_state['threads'] = get_all_thread_ids()
 
 # if 'thread_id' not in st.session_state:
 if 'thread_id' not in st.session_state:

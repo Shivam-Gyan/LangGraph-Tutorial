@@ -3,5 +3,6 @@ langgraph
 langchain_google_genai
 langchain_community
 langchain_ollama
+langgraph-checkpoint-sqlite
 dotenv
 streamlit
