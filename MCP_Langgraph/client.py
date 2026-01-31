@@ -8,7 +8,7 @@ from langchain_community.tools import DuckDuckGoSearchRun
 
 from pydantic import BaseModel
 from typing import List,Annotated
-from asyncio
+import asyncio
 
 
 model = ChatOllama(model="ministral-3:3b")
