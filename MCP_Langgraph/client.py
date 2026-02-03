@@ -27,7 +27,8 @@ SERVERS= {
     }
 
 
-model = ChatOllama(model="ministral-3:3b")
+model = ChatOllama(model="qwen3:1.7b")
+# model = ChatOllama(model="deepseek-r1:1.5b") # not support tools 
 
 # search tool 
 search_tool = DuckDuckGoSearchRun(region = 'us-en')
@@ -86,7 +87,7 @@ async def main():
     chat_bot = await build_graph()
 
     initial_state = {
-        'messages':[HumanMessage(content="summarize the expenses of food category from jan 1 2026 to feb 2 2026 using `summarize_expenses` tool from expense manager in rupee and after that also search on web about 26 january 2026 events using `DuckDuckGoSearchRun` tool")]
+        'messages':[HumanMessage(content="how many tools i have access?")]
     }
 
     final_state = await chat_bot.ainvoke(initial_state) # type: ignore
