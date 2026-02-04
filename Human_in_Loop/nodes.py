@@ -71,6 +71,7 @@ def publish_node(state:PostState):
     decision_message = interrupt(
     {
         "type": "human_approval_request",
+        'title': state.title,
         "reason": "Permission required to publish the generated social media post.",
         "instruction": (
             "Review the final generated tweet below and decide whether it is safe, "

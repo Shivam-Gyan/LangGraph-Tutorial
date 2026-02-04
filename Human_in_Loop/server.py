@@ -5,7 +5,7 @@ from states import PostState
 from nodes import conditional_node, evaluation_node, generation_node, optimise_node, publish_node, publish_node
 from langgraph.checkpoint.memory import InMemorySaver
 from configuration import config # importing configuration settings from external file
-from pprint import pprint
+# from pprint import pprint
 
 # graph structure
 
@@ -39,7 +39,7 @@ post_generation_Workflow = graph.compile(checkpointer=checkpointer)
 if __name__ == "__main__":
 
     initial_state = PostState(
-        title="The struggles of working from home",
+        title="ahabhshashbas bsh",
         post="",
         post_history=[],
         feedback_history=[],
@@ -47,18 +47,21 @@ if __name__ == "__main__":
         feedback="",
         iteration=0,
         max_iteration=3,
-        # messages=[]
         publish_approval="not_published",
         comments=""
     )
 
-    final_state = post_generation_Workflow.invoke(initial_state, config=config) # type: ignore
+    # final_state = post_generation_Workflow.invoke(initial_state, config=config) # type: ignore
     # print("\n\n\n\nFinal State:\n\n", final_state)
 
+    # Creating a snapshot after initial invocation and interrupting for human approval
+    post_generation_Workflow.invoke(initial_state, config=config) # type: ignore
+
+    # get the interrupted node details and data from the snapshot
     snapshot = post_generation_Workflow.get_state(config=config) # type: ignore
 
     if snapshot.next:
-        print("\n\n\n\nSnapshot State:", snapshot.next)
+        print("\n\nnSnapshot State:", snapshot.next)
 
         interrupt_data = snapshot.interrupts[0].value
 
@@ -66,6 +69,7 @@ if __name__ == "__main__":
         print("-" * 50)
         print("Reason:", interrupt_data["reason"])
         print("\nInstruction:", interrupt_data["instruction"])
+        print('\nTitle:', interrupt_data["title"])
         print("\nGenerated Post:\n")
         print(interrupt_data["post"])
         print("-" * 50)
@@ -84,20 +88,12 @@ if __name__ == "__main__":
             config=config # type: ignore
         )
 
-        # print("\n\n\n\nFinal Result State:\n\n", final_result)
         print("\n\n")
-        # printable_state = {
-        #     "title": final_result.title,
-        #     "post": final_result.post,
-        #     # "post_history": final_result.post_history,
-        #     # "feedback_history": final_result.feedback_history,
-        #     "evaluated_post": final_result.evaluated_post,
-        #     "feedback": final_result.feedback,
-        #     "iteration": final_result.iteration,
-        #     "publish_approval": final_result.publish_approval,
-        #     "comments": final_result.comments
-        # }
-        pprint(final_result)
+        print("Final Publication Decision:")
+        print("\nTitle : ",final_result['title'])
+        print("\nPost : ",final_result['post'])
+        print('\nPublish Approval : ',final_result['publish_approval']) 
+        print("\nComments : ",final_result['comments']) 
         print("\n\n")
 
 
